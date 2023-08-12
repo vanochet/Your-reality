@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 
@@ -21,11 +21,21 @@ background_mode = 2
 background_sky = SubResource( 2 )
 
 [sub_resource type="SpatialMaterial" id=4]
+render_priority = 64
 flags_unshaded = true
 flags_no_depth_test = true
 
 [sub_resource type="QuadMesh" id=5]
 material = SubResource( 4 )
+
+[sub_resource type="SpatialMaterial" id=6]
+render_priority = 64
+flags_unshaded = true
+flags_no_depth_test = true
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="QuadMesh" id=7]
+material = SubResource( 6 )
 
 [node name="Player" type="KinematicBody"]
 script = ExtResource( 1 )
@@ -43,8 +53,21 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.745623, -0.39401, -1.23768 )
 
 [node name="Camera" type="Camera" parent="Head"]
 environment = SubResource( 3 )
+far = 10000.0
 
 [node name="Pointer" type="MeshInstance" parent="Head/Camera"]
-transform = Transform( 0.0707107, -0.0707107, 0, 0.0707107, 0.0707107, 0, 0, 0, 1, 0, 0, -5.23021 )
+transform = Transform( 0.0353553, -0.0353553, 0, 0.0353553, 0.0353553, 0, 0, 0, 1, 0, 0, -5.23021 )
+mesh = SubResource( 5 )
+skeleton = NodePath("../..")
+
+[node name="Pointer2" type="MeshInstance" parent="Head/Camera"]
+transform = Transform( 0.0565685, -0.0565685, 0, 0.0565685, 0.0565685, 0, 0, 0, 1, 0, 0, -5.23325 )
+visible = false
+mesh = SubResource( 7 )
+skeleton = NodePath("../..")
+
+[node name="Pointer3" type="MeshInstance" parent="Head/Camera"]
+transform = Transform( 0.0707107, -0.0707107, 0, 0.0707107, 0.0707107, 0, 0, 0, 1, 0, 0, -5.23643 )
+visible = false
 mesh = SubResource( 5 )
 skeleton = NodePath("../..")

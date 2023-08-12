@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/Wall.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/WallWithDoor.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/WhiteHole.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/WhiteHole.gd" type="Script" id=5]
+
+[node name="DarkWorld" type="Spatial"]
+
+[node name="Top" parent="." instance=ExtResource( 1 )]
+transform = Transform( -2.62268e-07, 8, -4.37114e-08, 0, -3.49691e-07, -1, -6, -3.49691e-07, 1.91069e-15, 0, 4, 0 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55918, 0 )
+mouse_sensitivity = 0.15
+
+[node name="Walls" type="Spatial" parent="."]
+
+[node name="WallWithDoor1" parent="Walls" instance=ExtResource( 3 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 2, -6 )
+
+[node name="Wall2" parent="Walls" instance=ExtResource( 1 )]
+transform = Transform( -4, 0, -3.49691e-07, 0, 4, 0, 3.49691e-07, 0, -4, 0, 2, 6 )
+
+[node name="Wall3" parent="Walls" instance=ExtResource( 1 )]
+transform = Transform( -2.62268e-07, 0, -1, 0, 4, 0, 6, 0, -4.37114e-08, 4, 2, 0 )
+
+[node name="Wall4" parent="Walls" instance=ExtResource( 1 )]
+transform = Transform( -2.62268e-07, 0, 1, 0, 4, 0, -6, 0, -4.37114e-08, -4, 2, 0 )
+
+[node name="Floor" type="Spatial" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource( 1 )]
+transform = Transform( -2.62268e-07, -8, -4.37114e-08, 0, -3.49691e-07, 1, -6, 3.49691e-07, 1.91069e-15, 0, 0, 0 )
+
+[node name="Floor2" parent="Floor" instance=ExtResource( 1 )]
+transform = Transform( -2.62268e-07, -8, -4.37114e-08, 0, -3.49691e-07, 1, -6, 3.49691e-07, 1.91069e-15, 0, 0, -12 )
+
+[node name="HoleRotator" type="Spatial" parent="."]
+transform = Transform( 0.977069, -0.208016, 0.0454554, 0.189904, 0.754793, -0.627873, 0.0962984, 0.622107, 0.776987, 0, 0, 0 )
+
+[node name="Hole" parent="HoleRotator" instance=ExtResource( 4 )]
+transform = Transform( 0.878739, -0.0606528, -0.473434, -0.158076, 0.898935, -0.408569, 0.450367, 0.433864, 0.780341, 21.3536, 25.2483, -36.8275 )
+visible = false
+script = ExtResource( 5 )

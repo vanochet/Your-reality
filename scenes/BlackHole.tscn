@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+render_mode unshaded;
+
+
+uniform vec4 color: hint_color;
+uniform vec4 highlight_color: hint_color;
+uniform float k: hint_range(0.888, 0.999);
+uniform float border_width: hint_range(0.1, 0.3);
+
+
+varying vec3 xyz;
+void vertex(){
+	xyz = VERTEX.xyz;
+}
+
+
+void fragment(){
+	ALBEDO = color.xyz;
+	ALPHA = (1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1));// > k ? 1.0 : 0.0;
+	//if ((k-border_width)<(1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1))&&(1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1))<(k+border_width)){
+	//	ALBEDO = highlight_color.xyz;
+	//}
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+render_priority = -126
+shader = SubResource( 1 )
+shader_param/color = null
+shader_param/highlight_color = Color( 1, 1, 1, 1 )
+shader_param/k = 0.999
+shader_param/border_width = 0.3
+
+[sub_resource type="PlaneMesh" id=3]
+material = SubResource( 2 )
+size = Vector2( 100, 100 )
+
+[sub_resource type="SpatialMaterial" id=4]
+render_priority = -127
+flags_unshaded = true
+
+[sub_resource type="PlaneMesh" id=5]
+material = SubResource( 4 )
+size = Vector2( 100, 100 )
+
+[node name="Hole" type="Spatial"]
+
+[node name="Model" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 3 )
+
+[node name="Model2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1.57038 )
+mesh = SubResource( 5 )

@@ -1,8 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://textures/wall_02.png" type="Texture" id=1]
+[ext_resource path="res://sprites/door.png" type="Texture" id=2]
+[ext_resource path="res://scripts/DoorArea.gd" type="Script" id=3]
+
+[sub_resource type="BoxShape" id=6]
+extents = Vector3( 1, 0.5, 0.025 )
 
 [sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
 flags_unshaded = true
 flags_vertex_lighting = true
 flags_do_not_receive_shadows = true
@@ -16,14 +22,93 @@ size = Vector2( 2, 1 )
 subdivide_width = 32
 subdivide_depth = 16
 
-[sub_resource type="BoxShape" id=6]
-extents = Vector3( 1, 0.5, 0.025 )
+[sub_resource type="PlaneMesh" id=12]
+material = SubResource( 4 )
+flip_faces = true
+size = Vector2( 2, 1 )
+subdivide_width = 32
+subdivide_depth = 16
 
-[node name="WallWithDoor" type="StaticBody"]
+[sub_resource type="SpatialMaterial" id=7]
+flags_unshaded = true
+params_diffuse_mode = 4
+params_specular_mode = 4
+albedo_texture = ExtResource( 2 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
+[sub_resource type="PlaneMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 2, 1 )
+subdivide_width = 32
+subdivide_depth = 16
+
+[sub_resource type="SpatialMaterial" id=13]
+flags_unshaded = true
+params_diffuse_mode = 4
+params_specular_mode = 4
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="PlaneMesh" id=14]
+material = SubResource( 13 )
+flip_faces = true
+size = Vector2( 2, 1 )
+subdivide_width = 32
+subdivide_depth = 16
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 0.15, 0.294, 0.005 )
+
+[sub_resource type="BoxShape" id=15]
+extents = Vector3( 0.341614, 0.294, 0.3667 )
+
+[node name="WallWithDoor" type="Spatial"]
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 0.413693, 0, 0, 0, 1.0881, 0, 0, 0, 1, -0.586071, 0, 0 )
+shape = SubResource( 6 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 0.37801, 0, 0, 0, 1.0881, 0, 0, 0, 1, 0.62191, 0, 0 )
+shape = SubResource( 6 )
+
+[node name="Wall" type="MeshInstance" parent="StaticBody"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
 mesh = SubResource( 5 )
+skeleton = NodePath("../..")
 
-[node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 6 )
+[node name="Wall2" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 12 )
+skeleton = NodePath("../..")
+
+[node name="Door" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.176, -0.217, 0 )
+
+[node name="Pivot" type="StaticBody" parent="Door"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169801, 0.217, 0 )
+
+[node name="Sprite1" type="MeshInstance" parent="Door/Pivot"]
+transform = Transform( 0.146554, 0, 0, 0, -2.54799e-08, -0.582913, 0, 1, -4.37114e-08, 0.038, -0.207, 0.01 )
+mesh = SubResource( 8 )
+skeleton = NodePath("../../..")
+
+[node name="Sprite2" type="MeshInstance" parent="Door/Pivot"]
+transform = Transform( 0.146554, 0, 0, 0, -2.54799e-08, -0.582913, 0, 1, -4.37114e-08, 0.038, -0.207, -0.01 )
+mesh = SubResource( 14 )
+skeleton = NodePath("../../..")
+
+[node name="Hitbox" type="CollisionShape" parent="Door/Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0401025, -0.20445, -0.0142385 )
+shape = SubResource( 11 )
+
+[node name="Area" type="Area" parent="Door"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169801, 0.217, 0 )
+script = ExtResource( 3 )
+
+[node name="Hitbox" type="CollisionShape" parent="Door/Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0401025, -0.20445, -0.0142385 )
+shape = SubResource( 15 )
+
+[connection signal="body_entered" from="Door/Area" to="Door/Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Door/Area" to="Door/Area" method="_on_body_exited"]
