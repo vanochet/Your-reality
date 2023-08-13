@@ -115,7 +115,7 @@ transform = Transform( -2.62268e-07, 8, -4.37114e-08, 0, -3.49691e-07, -1, -6, -
 transform = Transform( -8.21774e-07, 8, -4.37114e-08, 0, -3.49691e-07, -1, -18.8, -3.49691e-07, 1.91069e-15, 0, 4, -24.7822 )
 
 [node name="Player" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55918, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55918, -46.2774 )
 script = ExtResource( 2 )
 mouse_sensitivity = 0.15
 
