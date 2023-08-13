@@ -1,0 +1,111 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://sprites/jinnjan.png" type="Texture" id=1]
+[ext_resource path="res://scenes/Injan.gd" type="Script" id=2]
+[ext_resource path="res://scripts/WhiteHole.gd" type="Script" id=3]
+[ext_resource path="res://scripts/Tizer1Camera.gd" type="Script" id=4]
+[ext_resource path="res://sprites/WhiteGround.png" type="Texture" id=5]
+
+[sub_resource type="Environment" id=1]
+background_mode = 1
+background_color = Color( 1, 1, 1, 1 )
+background_energy = 0.0
+
+[sub_resource type="Shader" id=6]
+code = "shader_type spatial;
+render_mode unshaded;
+
+
+uniform vec4 color: hint_color;
+uniform vec4 highlight_color: hint_color;
+uniform float k: hint_range(0.888, 0.999);
+uniform float border_width: hint_range(0.1, 0.3);
+
+
+varying vec3 xyz;
+void vertex(){
+	xyz = VERTEX.xyz;
+}
+
+
+void fragment(){
+	ALBEDO = color.xyz;
+	ALPHA = (1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1));// > k ? 1.0 : 0.0;
+	//if ((k-border_width)<(1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1))&&(1.0-pow(pow(xyz.x, 2)*pow(xyz.z, 2), 1))<(k+border_width)){
+	//	ALBEDO = highlight_color.xyz;
+	//}
+}
+"
+
+[sub_resource type="ShaderMaterial" id=7]
+render_priority = -126
+shader = SubResource( 6 )
+shader_param/color = null
+shader_param/highlight_color = Color( 1, 1, 1, 1 )
+shader_param/k = 0.999
+shader_param/border_width = 0.3
+
+[sub_resource type="PlaneMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 100, 100 )
+
+[sub_resource type="SpatialMaterial" id=4]
+render_priority = -127
+flags_unshaded = true
+
+[sub_resource type="PlaneMesh" id=5]
+material = SubResource( 4 )
+size = Vector2( 100, 100 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="QuadMesh" id=3]
+material = SubResource( 2 )
+
+[sub_resource type="SpatialMaterial" id=9]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 5 )
+
+[sub_resource type="PlaneMesh" id=10]
+material = SubResource( 9 )
+
+[node name="LightWorldCutscene" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.75 )
+environment = SubResource( 1 )
+far = 10000.0
+
+[node name="WorldNode" type="Spatial" parent="."]
+script = ExtResource( 4 )
+
+[node name="Hole" type="Spatial" parent="WorldNode"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26.812 )
+script = ExtResource( 3 )
+
+[node name="Model" type="MeshInstance" parent="WorldNode/Hole"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 8 )
+
+[node name="Model2" type="MeshInstance" parent="WorldNode/Hole"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1.57038 )
+mesh = SubResource( 5 )
+
+[node name="Injan" type="Spatial" parent="WorldNode"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26.926 )
+script = ExtResource( 2 )
+
+[node name="Injan" type="MeshInstance" parent="WorldNode/Injan"]
+transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 3 )
+skeleton = NodePath("../../..")
+
+[node name="Ground" type="Spatial" parent="WorldNode"]
+
+[node name="MeshInstance" type="MeshInstance" parent="WorldNode/Ground"]
+transform = Transform( 30.0226, 0, 0, 0, 2.37421, 0, 0, 0, 17.7921, 0, -12.7069, -7.29603 )
+mesh = SubResource( 10 )

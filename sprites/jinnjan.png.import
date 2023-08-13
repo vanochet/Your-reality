@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/try_e.png-94d82d525fbe9a6e7bf294377d0cd2a9.s3tc.stex"
-path.etc2="res://.import/try_e.png-94d82d525fbe9a6e7bf294377d0cd2a9.etc2.stex"
+path.s3tc="res://.import/jinnjan.png-4de5f862b977c8b7db769d357e053d32.s3tc.stex"
+path.etc2="res://.import/jinnjan.png-4de5f862b977c8b7db769d357e053d32.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/try_e.png"
-dest_files=[ "res://.import/try_e.png-94d82d525fbe9a6e7bf294377d0cd2a9.s3tc.stex", "res://.import/try_e.png-94d82d525fbe9a6e7bf294377d0cd2a9.etc2.stex" ]
+source_file="res://sprites/jinnjan.png"
+dest_files=[ "res://.import/jinnjan.png-4de5f862b977c8b7db769d357e053d32.s3tc.stex", "res://.import/jinnjan.png-4de5f862b977c8b7db769d357e053d32.etc2.stex" ]
 
 [params]
 
