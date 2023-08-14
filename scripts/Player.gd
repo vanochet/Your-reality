@@ -14,6 +14,7 @@ onready var head = $Head
 
 var dir
 var vel: Vector3 = Vector3()
+var chunk_cache = 0
 
 
 func _ready():
@@ -21,6 +22,19 @@ func _ready():
 
 
 func _process(delta):
+	var chunk_pos: Vector2 = (Vector2(transform.origin.x, transform.origin.z)/Vector2(64, 64)).round() + Vector2(8, 8)
+	var chunk_id: int = int(chunk_pos.y * 16 + chunk_pos.x - 10)
+	var chunk_sid := str(chunk_id)
+	for _i in range((3 - chunk_sid.length())):
+		chunk_sid = "0" + chunk_sid
+	print("chunk pos: ", chunk_pos)
+	print("chunk image: \"res://heightmaps/dark/image_part_"+chunk_sid+".png\"")
+	if chunk_id != chunk_cache:
+		get_parent().get_node("Heightmap").heightmap = load(str("res://heightmaps/dark/image_part_"+chunk_sid+".png"))
+		get_parent().get_node("Heightmap").material.set_texture(0, load(str("res://textmaps/dark/image_part_"+chunk_sid+".png")))
+		chunk_cache = chunk_id
+		get_parent().get_node("Heightmap")._ready()
+	
 	dir = Vector3()
 	var cam_xform = camera.get_global_transform()
 	var input_movement_vector = Vector2()

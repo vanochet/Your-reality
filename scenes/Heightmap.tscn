@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://materials/Dark.material" type="Material" id=1]
+[ext_resource path="res://scripts/Heightmap.gd" type="Script" id=2]
+[ext_resource path="res://textmaps/dark/image_part_127.png" type="Texture" id=3]
+[ext_resource path="res://shaders/outline.shader" type="Shader" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 4 )
+shader_param/enable = true
+shader_param/outline_thickness = 0.1
+shader_param/color = Color( 1, 1, 1, 0 )
+
+[sub_resource type="SpatialMaterial" id=4]
+next_pass = SubResource( 1 )
+flags_unshaded = true
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="PlaneMesh" id=2]
+material = ExtResource( 1 )
+size = Vector2( 32, 32 )
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="BoxShape" id=3]
+
+[node name="Heightmap" type="Spatial"]
+script = ExtResource( 2 )
+material = SubResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="MeshInstance"]
+
+[node name="CollisionShape" type="CollisionShape" parent="MeshInstance/StaticBody"]
+shape = SubResource( 3 )
