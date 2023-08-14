@@ -64,7 +64,9 @@ func load_chunk(pos: Vector3, shift: Vector2):
 	chunk.material.set_texture(0, load(str("res://textmaps/dark/image_part_"+mapname+".png")))
 	
 	# and applying them
-	var _a = Thread.new().start(chunk, "update")
+	# unused because of crushing, uuse at your own risk
+	# var _a = Thread.new().start(chunk, "update")
+	chunk.update()
 
 
 func _process(delta):
