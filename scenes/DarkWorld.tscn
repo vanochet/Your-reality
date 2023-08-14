@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://scenes/Wall.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://scenes/SimpleCatana.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/Heightmap.tscn" type="PackedScene" id=11]
 [ext_resource path="res://heightmaps/dark/image_part_127.png" type="Texture" id=12]
+[ext_resource path="res://scenes/FreeCamera.gd" type="Script" id=13]
 
 [sub_resource type="CubeMesh" id=15]
 material = ExtResource( 8 )
@@ -300,6 +301,7 @@ transform = Transform( -2.31131e-09, 4.61769e-11, -0.05, 0.0172354, 0.0469355, -
 
 [node name="Camera" type="Camera" parent="Player/Head"]
 environment = SubResource( 3 )
+current = true
 far = 10000.0
 
 [node name="Pointer" type="Spatial" parent="Player/Head/Camera"]
@@ -325,8 +327,35 @@ transform = Transform( 0.08, 0, 0, 0, -4.37114e-11, -0.08, 0, 0.001, -3.49691e-0
 mesh = SubResource( 10 )
 skeleton = NodePath("../../..")
 
-[node name="Heightmap" parent="." instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10.3134, -55.0781 )
+[node name="FreeCam" type="Spatial" parent="."]
+transform = Transform( -4.23971e-08, 0.243378, -0.969932, 1.06384e-08, 0.969932, 0.243378, 1, 0, -4.37114e-08, -47.6993, 15.6921, -7.66793 )
+script = ExtResource( 13 )
+mouse_sensitivity = 0.1
+
+[node name="Head" type="Spatial" parent="FreeCam"]
+
+[node name="Camera" type="Camera" parent="FreeCam/Head"]
+
+[node name="Terrain" type="Spatial" parent="."]
+
+[node name="hm_0_0" parent="Terrain" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8572, 58.811 )
+heightmap = ExtResource( 12 )
+
+[node name="hm_m1_0" parent="Terrain" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -64, -17.8572, 58.811 )
+heightmap = ExtResource( 12 )
+
+[node name="hm_1_0" parent="Terrain" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 64, -17.8572, 58.811 )
+heightmap = ExtResource( 12 )
+
+[node name="hm_0_m1" parent="Terrain" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8572, -5.189 )
+heightmap = ExtResource( 12 )
+
+[node name="hm_0_1" parent="Terrain" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8572, 122.811 )
 heightmap = ExtResource( 12 )
 
 [connection signal="body_entered" from="PrisonDoor/Area" to="PrisonDoor/Area" method="_on_body_entered"]

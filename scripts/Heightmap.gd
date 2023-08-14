@@ -5,6 +5,7 @@ var height;
 
 export var heightmap: Texture
 export var material: Material
+export var max_height: float = 10.0
 
 var heightData = {}
 
@@ -14,7 +15,7 @@ var normals = PoolVector3Array()
 
 var tmpMesh = Mesh.new()
 
-func _ready():
+func update():
 	width = heightmap.get_width()
 	height = heightmap.get_height()
 	
@@ -23,7 +24,7 @@ func _ready():
 	data.lock()
 	for x in range(0,width):
 		for y in range(0,height):
-			heightData[Vector2(x,y)] = data.get_pixel(x, y).r*10
+			heightData[Vector2(x,y)] = data.get_pixel(x, y).r * max_height - max_height / 2.0
 	data.unlock()
 	
 	# generate terrain
@@ -33,7 +34,6 @@ func _ready():
 	
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	st.set_material(material)
 	
 	for v in vertices.size():
 		st.add_color(Color(1,1,1))
@@ -44,6 +44,7 @@ func _ready():
 	st.commit(tmpMesh)
 	
 	$MeshInstance.mesh = tmpMesh
+	$MeshInstance.material_override = material
 	var shape = ConcavePolygonShape.new()
 	shape.set_faces(tmpMesh.get_faces())
 	$MeshInstance/StaticBody/CollisionShape.shape = shape
@@ -95,3 +96,7 @@ func createQuad(x,y):
 	
 	for _i in range(0,3):
 		normals.push_back(normal)
+
+func _process(_delta):
+	$MeshInstance/CollisionMargin.global_translation.x = get_parent().get_parent().get_node("Player").global_translation.x
+	$MeshInstance/CollisionMargin.global_translation.z = get_parent().get_parent().get_node("Player").global_translation.z
