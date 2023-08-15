@@ -15,13 +15,7 @@ onready var head = $Head
 
 var dir
 var vel: Vector3 = Vector3()
-var chunk_cache: int = -1
-
-onready var chunk_0_0 = get_parent().get_node("Terrain/hm_0_0")
-onready var chunk_1_0 = get_parent().get_node("Terrain/hm_1_0")
-onready var chunk_0_1 = get_parent().get_node("Terrain/hm_0_1")
-onready var chunk_m1_0 = get_parent().get_node("Terrain/hm_m1_0")
-onready var chunk_0_m1 = get_parent().get_node("Terrain/hm_0_m1")
+var chunk_cache: Vector3
 
 
 func _ready():
@@ -35,6 +29,7 @@ func load_chunk(pos: Vector3, shift: Vector2):
 	var global_pos: Vector3
 	var node_name: String
 	var chunk: Spatial
+	var thread: Thread
 	
 	# calculate coordinates
 	pos2d = (Vector2(pos.x, pos.y) / Vector2(64, 64) + Vector2(7, 7) + shift).round()
@@ -64,17 +59,24 @@ func load_chunk(pos: Vector3, shift: Vector2):
 	chunk.material.set_texture(0, load(str("res://textmaps/dark/image_part_"+mapname+".png")))
 	
 	# and applying them
-	# unused because of crushing, uuse at your own risk
-	# var _a = Thread.new().start(chunk, "update")
-	chunk.update()
+	# unused because of crushing, use at your own risk
+	thread = Thread.new()
+	thread.start(chunk, "update")
+	return thread
+	# chunk.update()
 
 
 func _process(delta):
-	load_chunk(transform.origin, Vector2(0, 0))
-	load_chunk(transform.origin, Vector2(1, 0))
-	load_chunk(transform.origin, Vector2(0, 1))
-	load_chunk(transform.origin, Vector2(-1, 0))
-	load_chunk(transform.origin, Vector2(0, -1))
+	#if (transform.origin / Vector3(64, 64, 64)).round() != chunk_cache:
+	#	var threads: Array = []
+	#	chunk_cache = (transform.origin / Vector3(64, 64, 64)).round()
+	#	threads.append(load_chunk(transform.origin, Vector2(0, 0)))
+	#	threads.append(load_chunk(transform.origin, Vector2(1, 0)))
+	#	threads.append(load_chunk(transform.origin, Vector2(0, 1)))
+	#	threads.append(load_chunk(transform.origin, Vector2(-1, 0)))
+	#	threads.append(load_chunk(transform.origin, Vector2(0, -1)))
+	#	for t in threads:
+	#		t.wait_to_finish()
 	
 	if enabled:
 		dir = Vector3()
@@ -88,9 +90,6 @@ func _process(delta):
 			input_movement_vector.x -= 1
 		if Input.is_action_pressed("ui_right"):
 			input_movement_vector.x += 1
-	
-		if Input.is_action_just_pressed("ui_focus_next"):
-			OS.window_fullscreen = !OS.window_fullscreen
 	
 		input_movement_vector = input_movement_vector.normalized()
 	
@@ -130,5 +129,5 @@ func _input(event):
 		rotate_y(deg2rad(event.relative.x * mouse_sensitivity * -1))
 		
 		var camera_rot = head.rotation_degrees
-		camera_rot.x = clamp(camera_rot.x, -70, 70)
+		camera_rot.x = clamp(camera_rot.x, -89, 89)
 		head.rotation_degrees = camera_rot

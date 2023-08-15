@@ -5,7 +5,7 @@ extends Spatial
 # var a = 2
 # var b = "text"
 
-var shift := Vector3(21.354, 23.689, -36.827)
+var shift := Vector3(0, 100, 0)  # 21.354, 23.689, -36.827)
 
 
 # Called when the node enters the scene tree for the first time.

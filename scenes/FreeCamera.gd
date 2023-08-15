@@ -40,20 +40,20 @@ func _process(delta):
 		dir.y = -speed
 	
 	if Input.is_action_just_pressed("ui_alt"):
-	#	if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-	#		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#	else:
-	#		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		if !get_parent().get_node("Player").enabled:
-			$Head/Camera.current = false
-			get_parent().get_node("Player/Head/Camera").current = true
-			get_parent().get_node("Player").enabled = true
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		else:
-			$Head/Camera.current = true
-			get_parent().get_node("Player/Head/Camera").current = false
-			get_parent().get_node("Player").enabled = false
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	#	if !get_parent().get_node("Player").enabled:
+	#		$Head/Camera.current = false
+	#		get_parent().get_node("Player/Head/Camera").current = true
+	#		get_parent().get_node("Player").enabled = true
+	#		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#	else:
+	#		$Head/Camera.current = true
+	#		get_parent().get_node("Player/Head/Camera").current = false
+	#		get_parent().get_node("Player").enabled = false
+	#		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	dir = dir.normalized()
 	

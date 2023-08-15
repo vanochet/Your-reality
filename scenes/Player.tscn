@@ -113,11 +113,13 @@ skeleton = NodePath("../../..")
 
 [node name="Pointer2" type="MeshInstance" parent="Head/Camera/Pointer"]
 transform = Transform( 0.08, 0, 0, 0, -4.37114e-11, -0.08, 0, 0.001, -3.49691e-09, 0, 0, -5.24091 )
+visible = false
 mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
 
 [node name="Pointer3" type="MeshInstance" parent="Head/Camera/Pointer"]
 transform = Transform( 0.08, 0, 0, 0, -4.37114e-11, -0.08, 0, 0.001, -3.49691e-09, 0, 0, -5.24733 )
+visible = false
 mesh = SubResource( 7 )
 skeleton = NodePath("../../..")
 
