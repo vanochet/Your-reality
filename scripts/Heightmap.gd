@@ -15,6 +15,9 @@ var normals = PoolVector3Array()
 
 var tmpMesh = Mesh.new()
 
+func _ready():
+	update()
+
 func update():
 	width = heightmap.get_width()
 	height = heightmap.get_height()
@@ -98,5 +101,5 @@ func createQuad(x,y):
 		normals.push_back(normal)
 
 func _process(_delta):
-	$MeshInstance/CollisionMargin.global_translation.x = get_parent().get_parent().get_node("Player").global_translation.x
-	$MeshInstance/CollisionMargin.global_translation.z = get_parent().get_parent().get_node("Player").global_translation.z
+	$MeshInstance/CollisionMargin.global_translation.x = get_parent().get_node("Player").global_translation.x
+	$MeshInstance/CollisionMargin.global_translation.z = get_parent().get_node("Player").global_translation.z

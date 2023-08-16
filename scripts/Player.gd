@@ -5,10 +5,9 @@ export var weapon: int = 0.0
 export var gravity: float = -24.8
 export var accel: float = 4.5
 export var deaccel: float = 16.0
-export var MAX_SLOPE_ANGLE: float = 89.0
+export var MAX_SLOPE_ANGLE: float = 70.0
 export var mouse_sensitivity: float = 0.05
 export var jump_strength: float = 9.0
-export var enabled: bool = true
 
 onready var camera = $Head/Camera
 onready var head = $Head
@@ -22,109 +21,59 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
-func load_chunk(pos: Vector3, shift: Vector2):
-	var pos2d: Vector2
-	var id: int
-	var mapname: String
-	var global_pos: Vector3
-	var node_name: String
-	var chunk: Spatial
-	var thread: Thread
-	
-	# calculate coordinates
-	pos2d = (Vector2(pos.x, pos.y) / Vector2(64, 64) + Vector2(7, 7) + shift).round()
-	id = int(pos2d.y) * 16 + int(pos2d.x) - 10
-	
-	# generate filename for hm and tm
-	mapname = str(id)
-	for _i in range(3 - mapname.length()):
-		mapname = "0" + mapname # so we need to align number by 3 via zeros
-	
-	# generate node name
-	node_name = "Terrain/hm_" + ("m" if shift.x < 0 else "") + str(abs(shift.x)) + "_" + \
-		("m" if shift.y < 0 else "") + str(abs(shift.y))
-	
-	# get node
-	chunk = get_parent().get_node(node_name)
-	
-	# calculate chunk new position    align by ones    align by center
-	pos2d = (pos2d - Vector2(7, 7)) * Vector2(64, 64) + Vector2(-32, 32)
-	global_pos = Vector3(pos2d.x, chunk.global_translation.y, pos2d.y)
-	
-	# I need to set the position before heightmap and texture becouse player cal fall out of scene
-	chunk.global_translation = global_pos
-	
-	# loading textures
-	chunk.heightmap = load(str("res://heightmaps/dark/image_part_"+mapname+".png"))
-	chunk.material.set_texture(0, load(str("res://textmaps/dark/image_part_"+mapname+".png")))
-	
-	# and applying them
-	# unused because of crushing, use at your own risk
-	thread = Thread.new()
-	thread.start(chunk, "update")
-	return thread
-	# chunk.update()
-
-
 func _process(delta):
-	#if (transform.origin / Vector3(64, 64, 64)).round() != chunk_cache:
-	#	var threads: Array = []
-	#	chunk_cache = (transform.origin / Vector3(64, 64, 64)).round()
-	#	threads.append(load_chunk(transform.origin, Vector2(0, 0)))
-	#	threads.append(load_chunk(transform.origin, Vector2(1, 0)))
-	#	threads.append(load_chunk(transform.origin, Vector2(0, 1)))
-	#	threads.append(load_chunk(transform.origin, Vector2(-1, 0)))
-	#	threads.append(load_chunk(transform.origin, Vector2(0, -1)))
-	#	for t in threads:
-	#		t.wait_to_finish()
+	dir = Vector3()
+	var cam_xform = camera.get_global_transform()
+	var input_movement_vector = Vector2()
+	if Input.is_action_pressed("ui_up"):
+		input_movement_vector.y += 1
+	if Input.is_action_pressed("ui_down"):
+		input_movement_vector.y -= 1
+	if Input.is_action_pressed("ui_left"):
+		input_movement_vector.x -= 1
+	if Input.is_action_pressed("ui_right"):
+		input_movement_vector.x += 1
 	
-	if enabled:
-		dir = Vector3()
-		var cam_xform = camera.get_global_transform()
-		var input_movement_vector = Vector2()
-		if Input.is_action_pressed("ui_up"):
-			input_movement_vector.y += 1
-		if Input.is_action_pressed("ui_down"):
-			input_movement_vector.y -= 1
-		if Input.is_action_pressed("ui_left"):
-			input_movement_vector.x -= 1
-		if Input.is_action_pressed("ui_right"):
-			input_movement_vector.x += 1
-	
-		input_movement_vector = input_movement_vector.normalized()
-	
-		dir += -cam_xform.basis.z * input_movement_vector.y
-		dir += cam_xform.basis.x * input_movement_vector.x
-	
-		if is_on_floor():
-			if Input.is_action_pressed("ui_accept"):
-				vel.y = jump_strength
-	
-		dir.y = 0
-		dir = dir.normalized()
-	
-		vel.y += delta * gravity
-	
-		var hvel = vel
-		hvel.y = 0
-	
-		var target = dir
-		target *= speed
-	
-		var do_accel
-		if dir.dot(hvel) > 0:
-			do_accel = accel
+	if Input.is_action_just_pressed("ui_alt"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		else:
-			do_accel = deaccel
-	
-		hvel = hvel.linear_interpolate(target, do_accel * delta)
-		vel.x = hvel.x
-		vel.z = hvel.z
-		vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+	input_movement_vector = input_movement_vector.normalized()
+
+	dir += -cam_xform.basis.z * input_movement_vector.y
+	dir += cam_xform.basis.x * input_movement_vector.x
+
+	if is_on_floor():
+		if Input.is_action_pressed("ui_accept"):
+			vel.y = jump_strength
+
+	dir.y = 0
+	dir = dir.normalized()
+
+	vel.y += delta * gravity
+
+	var hvel = vel
+	hvel.y = 0
+
+	var target = dir
+	target *= speed
+
+	var do_accel
+	if dir.dot(hvel) > 0:
+		do_accel = accel
+	else:
+		do_accel = deaccel
+
+	hvel = hvel.linear_interpolate(target, do_accel * delta)
+	vel.x = hvel.x
+	vel.z = hvel.z
+	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
 
 
 func _input(event):
-	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED && enabled:
+	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		head.rotate_x(deg2rad(event.relative.y * mouse_sensitivity * -1))
 		rotate_y(deg2rad(event.relative.x * mouse_sensitivity * -1))
 		
